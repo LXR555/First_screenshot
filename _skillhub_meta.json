@@ -1,0 +1,35 @@
+{
+  "name": "本机截图与打码",
+  "installedAt": 1792173553920,
+  "source": "local",
+  "version": "1.1.0",
+  "description_zh": "Windows 本机截图 + 打码技能：全屏/多屏/区域/前台窗口/标题匹配窗口/窗口清单六种模式，支持延迟、缩放、JPEG 压缩、剪贴板、连拍；打码支持纯色遮盖、马赛克、模糊、红框圈注。用于取证、汇报配图、外发前遮挡手机号/客户名/金额。",
+  "description_en": "Windows local screenshot and masking skill. Six modes (full screen, specific monitor, region, foreground window, window-by-title, window/monitor listing), plus delay, resize, JPEG compression, clipboard copy and burst capture. Masking supports solid fill, mosaic, blur and highlight boxes for redacting phone numbers, client names and amounts before sending out.",
+  "examples_zh": [
+    "把订单系统那个窗口截图给我",
+    "截个全屏，然后遮掉金额和客户名字再发我",
+    "现在都开了哪些窗口？列一下标题和坐标",
+    "截一张报价表，压缩到能发微信的大小"
+  ],
+  "examples_en": [
+    "Screenshot the order-system window for me",
+    "Capture the full screen, mask the amount and client name, then send it back",
+    "List every open window with its title and position",
+    "Capture the quote sheet and compress it so it fits in a chat message"
+  ],
+  "iconSource": "letter:auto",
+  "iconLocalPath": "C:\\Users\\Administrator\\.workbuddy\\skills\\screenshot\\_icon.svg",
+  "tags": [
+    "截图",
+    "截屏",
+    "screenshot",
+    "打码",
+    "马赛克",
+    "取证",
+    "剪贴板"
+  ],
+  "language": [
+    "zh-CN",
+    "en"
+  ]
+}

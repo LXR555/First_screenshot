@@ -1,0 +1,93 @@
+================================================================
+截图工具（WorkBuddySnap）— 许可证 / LICENSE
+================================================================
+
+一、本软件自身代码
+----------------------------------------------------------------
+
+本软件的原创代码（托盘程序、框选遮罩、截图逻辑、安装/卸载脚本等）
+采用 MIT 许可证：
+
+    MIT License
+
+    Copyright (c) 2026 刘军平（Liu Junping）
+
+    特此免费授予任何获得本软件及相关文档文件（下称"本软件"）副本的
+    人不受限制地处理本软件的权利，包括但不限于使用、复制、修改、合并、
+    发布、分发、再许可和/或销售本软件副本的权利，以及允许获得本软件
+    副本的人如此行使权利，但须符合下列条件：
+
+    上述版权声明和本许可声明应包含在本软件的所有副本或重要部分中。
+
+    本软件"按原样"提供，不附带任何明示或暗示的担保，包括但不限于
+    对适销性、特定用途适用性和不侵权的担保。在任何情况下，作者或
+    版权持有人均不对因本软件、本软件的使用或其他交易引起的或与之
+    相关的任何索赔、损害或其他责任负责，无论是在合同诉讼、侵权
+    诉讼还是其他诉讼中。
+
+
+二、第三方组件
+----------------------------------------------------------------
+
+本软件使用 PyInstaller 打包为单文件程序，exe 内部内置了以下第三方
+开源组件及其依赖。使用本软件即视为同时接受下列组件的许可条款。
+各组件均未作修改；其完整许可文本可在对应发行版中获得（位置见下）。
+
+1. CPython 3.12.8 — PSF License（Python Software Foundation License）
+   https://docs.python.org/3/license.html
+   PSF 为宽松许可，允许在保留版权声明与免责声明的前提下自由使用、
+   复制与再分发。
+
+2. pystray 0.19.5 — GNU Lesser General Public License v3（LGPLv3）
+   许可文件：发行包 dist-info/COPYING（GPLv3 全文）、
+             dist-info/COPYING.LGPL（LGPLv3 全文）
+   本项目以"调用库"方式使用 pystray，未修改其源代码。
+   LGPLv3 要求使用者有能力替换该库版本；如需 pystray 0.19.5 源码，
+   可从 PyPI（pypi.org/project/pystray/0.19.5）下载。本项目另提供
+   "技能包"版本（未打包的 Python 源码），可配合上述源码自行重建。
+
+3. Pillow 12.3.0 — MIT-CMU License（HPND，PIL 历史许可）
+   Copyright (c) 1997-2011 by Secret Labs AB
+   Copyright (c) 1995-2011 by Fredrik Lundh
+   Copyright (c) 2010-2024 by Jeffrey A. Clark and contributors
+   许可文件：发行包 dist-info/licenses/LICENSE
+
+4. pywin32 312 — BSD 风格许可
+   Copyright (c) 1994-2008, Mark Hammond. All rights reserved.
+   许可文件：发行包 dist-info/licenses/ 下各子目录（win32、com、
+   pythonwin、isapi、adodbapi 等，其中含 Scintilla、PythonWin 等
+   子组件各自的许可）
+
+5. PyInstaller 6.22.3 — GNU GPL v2 or later + Bootloader Exception
+   许可文件：发行包 dist-info/licenses/COPYING.txt
+   Bootloader Exception 原文摘录：
+
+     In addition to the permissions in the GNU General Public License,
+     the authors give you unlimited permission to link or embed compiled
+     bootloader and related files into combinations with other programs,
+     and to distribute those combinations without any restriction coming
+     from the use of those files.
+
+   即：PyInstaller 的作者明确允许将其编译后的 bootloader 链接或嵌入
+   到其他程序中并无限制地分发该组合程序。PyInstaller 的 runtime hooks
+   为 Apache-2.0 许可。
+
+
+三、关于 PyInstaller 打包程序与杀毒软件
+----------------------------------------------------------------
+
+本 exe 由 PyInstaller 生成，属"解释器 + 代码"的单文件封装。部分杀毒
+软件会对这类打包程序报毒（误报）。本软件不联网、不修改系统目录、
+仅在用户目录下读写截图文件。如遇报毒，请选择"信任/放行"，或改用
+附带源码的"技能包"版本。
+
+
+四、免责声明
+----------------------------------------------------------------
+
+本软件按"原样"提供，不附带任何形式的明示或暗示担保。作者不对因
+使用本软件造成的任何直接或间接损失承担责任。截图功能依赖操作系统
+接口，部分全屏游戏、硬件加速视频窗口可能无法抓取。
+
+================================================================
+最后更新：2026-10-17
