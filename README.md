@@ -13,7 +13,7 @@
 | `scripts/shot.py` | 抓屏/裁剪/剪贴板/落盘核心逻辑 |
 | `scripts/install_shortcut.py` | 快捷方式 / 开机自启安装与卸载 |
 | `scripts/setup_env.py` | 构建/运行环境登记（env.json） |
-| `scripts/mask.py` | 框选遮罩视觉演示 |
+| `scripts/mask.py` | 打码 / 马赛克 / 模糊 / 红框圈注（外发前遮敏感信息） |
 | `assets/` | 托盘图标（snapbar.ico、tray.png） |
 | `references/usecases.md` | 使用场景示例 |
 | `references/分发与安装.md` | 分发、安装、FAQ |
