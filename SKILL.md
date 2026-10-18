@@ -26,12 +26,12 @@ python "<技能目录>/scripts/setup_env.py" --check  # 只体检，不改动任
 它把解释器路径写进 `%LOCALAPPDATA%\WorkBuddySnap\env.json`，`install_shortcut.py` 会自动读它。
 **换机后不要手改本文里的绝对路径**，以 `env.json` 为准。
 
-本机（Windows 11 / 用户 Administrator）现状：
+本机环境现状（示例，实际路径以 `env.json` 登记为准）：
 
 | 用途 | 解释器 |
 | --- | --- |
-| 脚本与打码（`shot.py` / `mask.py`） | `C:\Users\Administrator\.workbuddy\binaries\python\envs\default\Scripts\python.exe`（Pillow 12.x） |
-| GUI（`snapbar.py` / `install_shortcut.py`） | `...\envs\tkgui\Scripts\python.exe`（tkinter 8.6 + Pillow + pystray + pywin32）；启动用同目录 `pythonw.exe` |
+| 脚本与打码（`shot.py` / `mask.py`） | `default` 环境的 `python.exe`（Pillow 12.x） |
+| GUI（`snapbar.py` / `install_shortcut.py`） | `tkgui` 环境的 `python.exe`（tkinter 8.6 + Pillow + pystray + pywin32）；启动用同目录 `pythonw.exe` |
 
 受管 3.13.12 编译时没带 tkinter，所以 GUI 必须用 tkgui 环境；两套环境都已由 `setup_env.py` 登记。
 
@@ -42,8 +42,8 @@ python "<技能目录>/scripts/setup_env.py" --check  # 只体检，不改动任
 ## 快速开始
 
 ```bash
-PY="C:/Users/Administrator/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
-S="C:/Users/Administrator/.workbuddy/skills/screenshot/scripts/shot.py"
+PY="<default 环境的 python.exe>"    # 以 env.json 登记为准
+S="<技能目录>/scripts/shot.py"
 
 # 全屏（多显示器合并）
 "$PY" "$S" --mode full --tag desktop
@@ -104,7 +104,7 @@ S="C:/Users/Administrator/.workbuddy/skills/screenshot/scripts/shot.py"
 外发前必做的一件事：把手机号、客户姓名、金额、报价遮掉。坐标默认按像素（图片左上角为原点），加 `--pct` 后按百分比 0-100 写，**省去换算，推荐**。
 
 ```bash
-M="C:/Users/Administrator/.workbuddy/skills/screenshot/scripts/mask.py"
+M="<技能目录>/scripts/mask.py"
 
 # 遮掉左上那块 + 把重点区域打马赛克并加红框
 "$PY" "$M" --in "{截图路径}" --fill "10%,8%,30%,6%" --pct \
@@ -147,8 +147,8 @@ M="C:/Users/Administrator/.workbuddy/skills/screenshot/scripts/mask.py"
 ### 启动与安装
 
 ```bash
-PYG="C:/Users/Administrator/.workbuddy/binaries/python/envs/tkgui/Scripts/python.exe"
-PYW="C:/Users/Administrator/.workbuddy/binaries/python/envs/tkgui/Scripts/pythonw.exe"
+PYG="<tkgui 环境的 python.exe>"     # 以 env.json 登记为准
+PYW="<tkgui 环境的 pythonw.exe>"
 
 # 首次/换机：准备环境（自动找带 tkinter 的 Python + 建 venv + 装依赖 + 写 env.json）
 "$PYG" ".../scripts/setup_env.py" --wb
