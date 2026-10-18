@@ -108,7 +108,8 @@ def load_cfg() -> dict:
         with open(ENV_JSON, encoding="utf-8") as f:
             data = json.load(f)
         return data if isinstance(data, dict) else {}
-    except Exception:
+    except Exception as exc:
+        log(f"env.json 读取失败（按空配置继续启动）: {type(exc).__name__}: {exc}")
         return {}
 
 
@@ -158,7 +159,7 @@ def log(msg: str) -> None:
         if sys.stdout and not sys.stdout.closed:
             print(line, end="")
     except Exception:
-        pass
+        pass  # 日志自身失败（磁盘满/只读）不能再记日志——防递归，唯一允许的静默处
 
 
 def info_box(text: str, title: str = "截图工具") -> None:
@@ -173,8 +174,8 @@ def info_box(text: str, title: str = "截图工具") -> None:
         user32.MessageBoxW.argtypes = [wt.HWND, wt.LPCWSTR, wt.LPCWSTR, ctypes.c_uint]
         user32.MessageBoxW.restype = ctypes.c_int
         user32.MessageBoxW(None, text, title, 0x00000040)  # MB_OK | MB_ICONINFORMATION
-    except Exception:
-        pass
+    except Exception as exc:
+        log(f"消息框弹出失败: {type(exc).__name__}: {exc}")
 
 
 def make_tray_icon(size: int = 32, save: bool = True) -> Image.Image:
@@ -198,8 +199,8 @@ def make_tray_icon(size: int = 32, save: bool = True) -> Image.Image:
         try:
             os.makedirs(APP_DIR, exist_ok=True)
             im.save(TRAY_ICON, "PNG")
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"托盘图标落盘失败（改用内存图）: {type(exc).__name__}: {exc}")
     return im
 
 
@@ -208,7 +209,8 @@ def toplevel_hwnd(widget: tk.Misc) -> int:
     try:
         h = user32.GetAncestor(wt.HWND(widget.winfo_id()), GA_ROOT)
         return int(h) if h else 0
-    except Exception:
+    except Exception as exc:
+        log(f"取窗口句柄失败: {type(exc).__name__}: {exc}")
         return 0
 
 
@@ -293,7 +295,8 @@ def float_button_alive() -> bool:
     """旧 float 形态实例是否在跑（事件通道之外的兜底）。"""
     try:
         return bool(user32.FindWindowW(None, WINDOW_TITLE))
-    except Exception:
+    except Exception as exc:
+        log(f"探测 float 实例失败: {type(exc).__name__}: {exc}")
         return False
 
 
@@ -301,7 +304,8 @@ def workbuddy_rect() -> dict | None:
     """WorkBuddy 主窗口的物理坐标；最小化时返回 None。"""
     try:
         w = shot.find_window(TARGET_TITLE)
-    except Exception:
+    except Exception as exc:
+        log(f"查找 WorkBuddy 窗口失败: {type(exc).__name__}: {exc}")
         return None
     if not w:
         return None
@@ -316,8 +320,8 @@ def refocus_workbuddy() -> None:
     if w:
         try:
             user32.SetForegroundWindow(wt.HWND(w["handle"]))
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"焦点切回 WorkBuddy 失败: {type(exc).__name__}: {exc}")
 
 
 # ---------------------------------------------------------------------------
@@ -343,8 +347,8 @@ class Toast:
     def _close(self) -> None:
         try:
             self.win.destroy()
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"提示气泡关闭失败: {type(exc).__name__}: {exc}")
 
 
 # ---------------------------------------------------------------------------
@@ -530,8 +534,8 @@ class SnipOverlay:
         if self.on_cancel:
             try:
                 self.on_cancel()
-            except Exception:
-                pass
+            except Exception as exc:
+                log(f"取消回调异常: {type(exc).__name__}: {exc}")
 
     def _close(self) -> None:
         if not self._alive:
@@ -539,12 +543,12 @@ class SnipOverlay:
         self._alive = False
         try:
             self.win.grab_release()
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"释放鼠标捕获失败: {type(exc).__name__}: {exc}")
         try:
             self.win.destroy()
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"遮罩窗口销毁失败: {type(exc).__name__}: {exc}")
 
 
 # ---------------------------------------------------------------------------
@@ -569,8 +573,8 @@ class SnapBar:
         dpi = 96.0
         try:
             dpi = float(self.root.winfo_fpixels("1i"))
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"DPI 探测失败（按 96 处理）: {type(exc).__name__}: {exc}")
         self.scale = max(1.0, dpi / 96.0)
 
         if mode == "float":
@@ -652,7 +656,8 @@ class SnapBar:
             try:
                 if cand and os.path.exists(cand):
                     return Image.open(cand).convert("RGBA")
-            except Exception:
+            except Exception as exc:
+                log(f"托盘图标候选打开失败: {type(exc).__name__}: {exc}")
                 continue
         return make_tray_icon()
 
@@ -683,7 +688,8 @@ class SnapBar:
             while True:
                 try:
                     r = k32.WaitForSingleObject(wt.HANDLE(h), 0xFFFFFFFF)
-                except Exception:
+                except Exception as exc:
+                    log(f"唤醒等待失败，监听线程退出: {type(exc).__name__}: {exc}")
                     return
                 if r != 0:            # WAIT_FAILED / 句柄失效
                     return
@@ -745,8 +751,8 @@ class SnapBar:
                 log(f"热键消息循环异常: {type(exc).__name__}: {exc}")
             try:
                 u32.UnregisterHotKey(None, HOTKEY_ID)
-            except Exception:
-                pass
+            except Exception as exc:
+                log(f"热键注销失败: {type(exc).__name__}: {exc}")
             log("全局热键线程退出")
 
         threading.Thread(target=loop, daemon=True, name="snapbar-hotkey").start()
@@ -789,7 +795,8 @@ class SnapBar:
         self._press_xy = (e.x_root, e.y_root)
         try:
             self._press_geo = (self.win.winfo_x(), self.win.winfo_y())
-        except Exception:
+        except Exception as exc:
+            log(f"记录按钮位置失败: {type(exc).__name__}: {exc}")
             self._press_geo = (0, 0)
         self._moved = False
 
@@ -859,8 +866,8 @@ class SnapBar:
             self.win.withdraw()
             self.root.update_idletasks()
             time.sleep(0.09)                          # 等窗口真正从屏幕消失
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"隐藏按钮失败: {type(exc).__name__}: {exc}")
 
     def start_snip(self) -> None:
         if self.busy:
@@ -921,8 +928,8 @@ class SnapBar:
             os.makedirs(APP_DIR, exist_ok=True)
             img.save(LAST_PNG, "PNG")
             result["last"] = LAST_PNG
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"last.png 写入失败: {type(exc).__name__}: {exc}")
 
         result["bytes"] = os.path.getsize(result["path"]) if result.get("path") else 0
         log("截图完成 " + json.dumps(result, ensure_ascii=False))
@@ -954,8 +961,8 @@ class SnapBar:
             return
         try:
             self.win.deiconify()
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"按钮恢复显示失败: {type(exc).__name__}: {exc}")
         if self.follow:
             self._follow_once()
 
@@ -1012,13 +1019,13 @@ class SnapBar:
         try:
             if self.tray is not None:
                 self.tray.stop()
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"托盘停止失败: {type(exc).__name__}: {exc}")
         try:
             self.root.quit()
             self.root.destroy()
-        except Exception:
-            pass
+        except Exception as exc:
+            log(f"主窗口退出失败: {type(exc).__name__}: {exc}")
 
     def run(self) -> None:
         self.root.mainloop()
@@ -1051,8 +1058,8 @@ def selftest(region: str) -> int:
             clip_read = bool(user32.IsClipboardFormatAvailable(shot.CF_DIB))
         finally:
             user32.CloseClipboard()
-    except Exception:
-        pass
+    except Exception as exc:
+        log(f"剪贴板读回校验失败: {type(exc).__name__}: {exc}")
     print(json.dumps({"ok": True, "width": gw, "height": gh, "clipboard_written": clip,
                       "clipboard_readback": clip_read, "path": path, "last": LAST_PNG,
                       "bytes": os.path.getsize(path)}, ensure_ascii=False))
